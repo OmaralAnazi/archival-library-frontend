@@ -1,10 +1,17 @@
-import { Box, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  SimpleGrid,
+  VStack,
+  Text,
+  Center,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import SearchFilter from "./SearchFilter";
 import DocumentCard from "./DocumentCard";
 import { LibraryDocument } from "../../api/useAPI";
 
-// Temporary data simulating the JSON file content
+// TODO: Temporary data simulating the JSON file content. Replace with data from backend!
 const documents: LibraryDocument[] = [
   {
     id: 1,
@@ -74,11 +81,19 @@ const Explore = () => {
       <VStack spacing={4} mb={6}>
         <SearchFilter documents={documents} setFilteredDocs={setFilteredDocs} />
       </VStack>
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-        {filteredDocs.map((doc) => (
-          <DocumentCard key={doc.id} document={doc} />
-        ))}
-      </SimpleGrid>
+      {filteredDocs.length === 0 ? (
+        <Center>
+          <Text fontSize="lg" color="gray.500">
+            No documents found. Try adjusting your search or filter criteria.
+          </Text>
+        </Center>
+      ) : (
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+          {filteredDocs.map((doc) => (
+            <DocumentCard key={doc.id} document={doc} />
+          ))}
+        </SimpleGrid>
+      )}
     </Box>
   );
 };
