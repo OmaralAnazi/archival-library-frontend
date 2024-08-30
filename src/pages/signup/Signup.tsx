@@ -17,8 +17,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
+  firstName: Yup.string().min(3).required("First name is required"),
+  lastName: Yup.string().min(3).required("Last name is required"),
   phone: Yup.string()
     .required("Phone number is required")
     .matches(/^[0-9]+$/, "Phone number is not valid")
