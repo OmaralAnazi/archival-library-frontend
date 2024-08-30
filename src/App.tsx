@@ -6,6 +6,7 @@ import NotFound from "./pages/not-found/NotFound";
 import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 import Explore from "./pages/explore/Explore";
+import Upload from "./pages/upload/Upload";
 import { Flex } from "@chakra-ui/react";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/Signup" element={<Signup />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/upload" element={<Upload />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Flex>
