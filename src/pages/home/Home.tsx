@@ -9,6 +9,7 @@ import {
   Stack,
   Divider,
 } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -24,7 +25,7 @@ const Home = () => {
             Dive into a world of historical documents, rare collections, and
             digital treasures from across the globe.
           </Text>
-          <Button colorScheme="teal" size="lg">
+          <Button colorScheme="teal" size="lg" as={RouterLink} to="/explore">
             Explore Now
           </Button>
         </Box>
@@ -72,7 +73,13 @@ const Home = () => {
             students, and enthusiasts worldwide. Join us in our mission to keep
             history alive.
           </Text>
-          <Button variant="outline" colorScheme="teal" size="md">
+          <Button
+            variant="outline"
+            colorScheme="teal"
+            size="md"
+            as={RouterLink}
+            to="/more"
+          >
             Learn More
           </Button>
         </VStack>
@@ -90,7 +97,7 @@ const Home = () => {
           preservation, and education. Sign up for exclusive access to new
           collections and special events.
         </Text>
-        <Button colorScheme="teal" size="lg">
+        <Button colorScheme="teal" size="lg" as={RouterLink} to="/signup">
           Sign Up Today
         </Button>
       </Box>
