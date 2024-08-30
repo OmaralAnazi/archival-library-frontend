@@ -12,6 +12,18 @@ const Header = () => {
           <Link as={RouterLink} to="/" fontWeight="bold">
             Home
           </Link>
+          <Link as={RouterLink} to="/login" fontWeight="bold">
+            Login
+          </Link>
+          <Link as={RouterLink} to="/signup" fontWeight="bold">
+            Signup
+          </Link>
+          <Link as={RouterLink} to="/explore" fontWeight="bold">
+            Explore
+          </Link>
+          <Link as={RouterLink} to="/upload" fontWeight="bold">
+            Upload
+          </Link>
         </Flex>
       </Flex>
     </Box>
