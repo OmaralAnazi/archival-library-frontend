@@ -46,6 +46,7 @@ const Login = () => {
   return (
     <Box
       maxW="lg"
+      minW={{ base: "auto", md: "720px" }}
       mx="auto"
       mt={10}
       p={8}
