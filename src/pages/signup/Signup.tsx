@@ -57,8 +57,14 @@ const Signup = () => {
   });
 
   const onSubmit = async (data: SignupFormInputs) => {
+    const formattedData = {
+      ...data,
+      birthdate: data.birthdate.toISOString().split("T")[0], // Convert date to yyyy-MM-dd
+    };
+
+    console.log("Formatted Form Submitted", formattedData);
+
     // TODO: Handle the logic needed to talk to the backend!
-    console.log("Form Submitted", data);
   };
 
   return (
