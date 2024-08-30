@@ -9,11 +9,11 @@ import {
   Textarea,
   VStack,
   Heading,
-  useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import useCustomToast, { ToastStatus } from "../../hooks/useCustomToast";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -46,18 +46,11 @@ const Upload = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const toast = useToast();
+  const { showMessage } = useCustomToast();
 
   const onSubmit = (data: UploadFormInputs) => {
     // TODO: Implement upload logic (e.g., file upload to backend)
-    toast({
-      title: "Document Uploaded",
-      description: "Your document has been uploaded successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-
+    showMessage("Document Uploaded", ToastStatus.SUCCESS);
     reset();
   };
 
