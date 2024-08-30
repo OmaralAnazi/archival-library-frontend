@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Explore from "./pages/Explore";
 import { Flex } from "@chakra-ui/react";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/Signup" element={<Signup />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Flex>
