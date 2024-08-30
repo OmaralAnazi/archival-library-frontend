@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Explore from "./pages/Explore";
+import Home from "./pages/home/Home";
+import NotFound from "./pages/not-found/NotFound";
+import Login from "./pages/login/Login";
+import Signup from "./pages/signup/Signup";
+import Explore from "./pages/explore/Explore";
 import { Flex } from "@chakra-ui/react";
 
 function App() {
