@@ -6,13 +6,15 @@ import DocumentsSection from "./DocumentsSection";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import useAuthStore from "../../stores/AuthStore";
 import { useNavigate } from "react-router-dom";
+import useCustomToast, { ToastStatus } from "../../hooks/useCustomToast";
 
 const Account: React.FC = () => {
   const [documents, setDocuments] = useState<DocumentResponse[]>([]);
   const [selectedDocId, setSelectedDocId] = useState<number | null>(null);
   const { logout } = useAuthStore();
   const navigate = useNavigate();
-  const { getAllDocumentsByUser } = useAPI();
+  const { getAllDocumentsByUser, deleteDocument, viewDocumentFile } = useAPI();
+  const { showMessage } = useCustomToast();
 
   const {
     isOpen: isDeleteModalOpen,
@@ -41,10 +43,15 @@ const Account: React.FC = () => {
     onOpenDeleteModal();
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedDocId !== null) {
-      // TODO: implement with backend!
-      setDocuments((prevDocs) => prevDocs.filter((doc) => doc.id !== selectedDocId));
+      try {
+        await deleteDocument(selectedDocId);
+        setDocuments((prevDocs) => prevDocs.filter((doc) => doc.id !== selectedDocId));
+        showMessage("Document has been deleted successfully", ToastStatus.SUCCESS);
+      } catch (error: any) {
+        showMessage("Failed to delete the document", ToastStatus.ERROR);
+      }
       onCloseDeleteModal();
       setSelectedDocId(null);
     }
@@ -61,8 +68,7 @@ const Account: React.FC = () => {
 
         <DocumentsSection
           documents={documents}
-          // TODO: implement: it should open a new tab for this doc
-          onView={(id) => console.log(`Viewing document with id: ${id}`)}
+          onView={(id) => viewDocumentFile(id)}
           onDelete={handleDelete}
         />
       </Flex>

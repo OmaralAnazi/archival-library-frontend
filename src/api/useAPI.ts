@@ -7,6 +7,7 @@ const useAPI = () => {
   const { showMessage } = useCustomToast();
   const { accessToken } = useAuthStore();
   const { formatDate } = useFormat();
+  const { logout } = useAuthStore();
   const BASE_URL = "https://localhost:7076"; // TODO: extract to .env
 
   const api = axios.create({
@@ -28,7 +29,11 @@ const useAPI = () => {
       switch (status) {
         case 400:
           break;
-        case 401: // TODO: if 401, and has access token, then its expierd, log him out!!!
+        case 401:
+          if (accessToken) {
+            logout();
+            showMessage("Your login session has expired", ToastStatus.WARNING);
+          }
           break;
         case 403:
           showMessage(
@@ -85,7 +90,7 @@ const useAPI = () => {
       formData.append("file", request.file);
       formData.append("title", request.title);
       formData.append("description", request.description);
-      formData.append("categoryId", "1"); // TODO: replace with real id
+      formData.append("categoryId", request.categoryId);
 
       const options = {
         headers: {
@@ -119,12 +124,41 @@ const useAPI = () => {
     }
   };
 
+  const deleteDocument = async (id: number): Promise<unknown> => {
+    try {
+      const response = await api.delete(`/documents/${id}`);
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const getCategories = async (): Promise<CategoryResponse[]> => {
+    try {
+      const response = await api.get(`/categories`);
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const viewDocumentFile = async (id: number): Promise<void> => {
+    try {
+      window.open(`${BASE_URL}/api/documents/view/${id}`, "_blank");
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
   return {
     submitLoginForm,
     submitSignupForm,
     uploadDocument,
     getAllDocuments,
     getAllDocumentsByUser,
+    deleteDocument,
+    getCategories,
+    viewDocumentFile,
   };
 };
 
@@ -157,7 +191,7 @@ export interface UploadDocumentRequest {
   file: File;
   title: string;
   description: string;
-  category: string;
+  categoryId: string;
 }
 
 export interface DocumentResponse {
@@ -167,4 +201,9 @@ export interface DocumentResponse {
   categoryName: string;
   authorName: string;
   publicationDate: string;
+}
+
+export interface CategoryResponse {
+  id: number;
+  name: string;
 }

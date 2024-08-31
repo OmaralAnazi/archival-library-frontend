@@ -1,6 +1,7 @@
 import { HStack, Input, Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { DocumentResponse } from "../../api/useAPI";
+import useCategories from "../../hooks/useCategories";
 
 interface SearchFilterProps {
   documents: DocumentResponse[];
@@ -11,6 +12,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ documents, setFilteredDocs 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
+  const { categories } = useCategories();
 
   useEffect(() => {
     const filtered = documents
@@ -40,12 +42,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ documents, setFilteredDocs 
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
-          {/* TODO: get them from the backend */}
-          <option value="Science">Science</option>
-          <option value="History">History</option>
-          <option value="Preservation">Preservation</option>
-          <option value="Technology">Technology</option>
-          <option value="Cataloging">Cataloging</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.name}>
+              {c.name}
+            </option>
+          ))}
         </Select>
         <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
           <option value="newest">Newest</option>

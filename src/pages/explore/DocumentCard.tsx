@@ -1,11 +1,13 @@
 import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { DocumentResponse } from "../../api/useAPI";
+import useAPI, { DocumentResponse } from "../../api/useAPI";
 
 interface DocumentCardProps {
   document: DocumentResponse;
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
+  const { viewDocumentFile } = useAPI();
+
   return (
     <Flex
       p={4}
@@ -46,8 +48,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
           mt={{ base: 4, md: 0 }}
           colorScheme="teal"
           width="full"
-          // TODO: implement:
-          // onClick={() => window.open(document.documentUrl, "_blank")}
+          onClick={() => viewDocumentFile(document.id)}
         >
           View Document
         </Button>

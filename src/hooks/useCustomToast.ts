@@ -3,6 +3,7 @@ import { useToast } from "@chakra-ui/react";
 export enum ToastStatus {
   ERROR = "error",
   SUCCESS = "success",
+  WARNING = "warning",
 }
 
 const useCustomToast = () => {

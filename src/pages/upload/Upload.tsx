@@ -15,23 +15,15 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import useCustomToast, { ToastStatus } from "../../hooks/useCustomToast";
-import useAPI from "../../api/useAPI";
-
-// TODO: consider refactor this file
+import useAPI, { UploadDocumentRequest } from "../../api/useAPI";
+import useCategories from "../../hooks/useCategories";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
-  category: Yup.string().required("Category is required"),
+  categoryId: Yup.string().required("Category is required"),
   description: Yup.string().required("Description is required"),
   file: Yup.mixed<File>().required("A PDF file is required"),
 });
-
-type UploadFormInputs = {
-  title: string;
-  category: string;
-  description: string;
-  file: File;
-};
 
 const Upload = () => {
   const {
@@ -40,12 +32,13 @@ const Upload = () => {
     formState: { errors, isSubmitting },
     reset,
     setValue,
-  } = useForm<UploadFormInputs>({
+  } = useForm<UploadDocumentRequest>({
     resolver: yupResolver(validationSchema),
   });
   const { showMessage } = useCustomToast();
   const { uploadDocument } = useAPI();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { categories } = useCategories();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,7 +47,7 @@ const Upload = () => {
     }
   };
 
-  const onSubmit = async (data: UploadFormInputs) => {
+  const onSubmit = async (data: UploadDocumentRequest) => {
     try {
       await uploadDocument(data);
       showMessage("Document Uploaded Successfully", ToastStatus.SUCCESS);
@@ -87,17 +80,16 @@ const Upload = () => {
             <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.category}>
+          <FormControl isInvalid={!!errors.categoryId}>
             <FormLabel htmlFor="category">Category</FormLabel>
-            <Select id="category" placeholder="Select category" {...register("category")}>
-              {/* TODO: get from backend */}
-              <option value="Science">Science</option>
-              <option value="History">History</option>
-              <option value="Preservation">Preservation</option>
-              <option value="Technology">Technology</option>
-              <option value="Cataloging">Cataloging</option>
+            <Select id="category" placeholder="Select category" {...register("categoryId")}>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
             </Select>
-            <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors.categoryId?.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.description}>
