@@ -1,51 +1,18 @@
 import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { LibraryDocument } from "../../api/useAPI";
+import useAPI, { DocumentResponse } from "../../api/useAPI";
 import ProfileSection from "./ProfileSection";
 import DocumentsSection from "./DocumentsSection";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import useAuthStore from "../../stores/AuthStore";
 import { useNavigate } from "react-router-dom";
 
-// TODO: Temporary data simulating the JSON file content. Replace with data from backend!
-const documentsTemp: LibraryDocument[] = [
-  {
-    id: 1,
-    title: "Introduction to Archival Science",
-    author: "John Doe",
-    publicationDate: "2023-01-15",
-    description: "A comprehensive guide to understanding the basics of archival science.",
-    category: "Science",
-    imageUrl: "https://via.placeholder.com/150",
-    documentUrl: "https://example.com/document1.pdf",
-  },
-  {
-    id: 2,
-    title: "Introduction to Archival Science",
-    author: "John Doe",
-    publicationDate: "2023-01-15",
-    description: "A comprehensive guide to understanding the basics of archival science.",
-    category: "Science",
-    imageUrl: "https://via.placeholder.com/150",
-    documentUrl: "https://example.com/document1.pdf",
-  },
-  {
-    id: 3,
-    title: "Introduction to Archival Science",
-    author: "John Doe",
-    publicationDate: "2023-01-15",
-    description: "A comprehensive guide to understanding the basics of archival science.",
-    category: "Science",
-    imageUrl: "https://via.placeholder.com/150",
-    documentUrl: "https://example.com/document1.pdf",
-  },
-];
-
 const Account: React.FC = () => {
-  const [documents, setDocuments] = useState<LibraryDocument[]>([]);
+  const [documents, setDocuments] = useState<DocumentResponse[]>([]);
   const [selectedDocId, setSelectedDocId] = useState<number | null>(null);
   const { logout } = useAuthStore();
   const navigate = useNavigate();
+  const { getAllDocumentsByUser } = useAPI();
 
   const {
     isOpen: isDeleteModalOpen,
@@ -84,7 +51,7 @@ const Account: React.FC = () => {
   };
 
   useEffect(() => {
-    setDocuments(documentsTemp);
+    getAllDocumentsByUser().then((docs) => setDocuments(docs));
   }, []);
 
   return (
@@ -94,6 +61,7 @@ const Account: React.FC = () => {
 
         <DocumentsSection
           documents={documents}
+          // TODO: implement: it should open a new tab for this doc
           onView={(id) => console.log(`Viewing document with id: ${id}`)}
           onDelete={handleDelete}
         />

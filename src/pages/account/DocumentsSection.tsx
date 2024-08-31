@@ -1,9 +1,9 @@
 import { Box, Heading, Table, Tbody, Th, Thead, Tr, Text, Center } from "@chakra-ui/react";
 import DocumentRow from "./DocumentRow";
-import { LibraryDocument } from "../../api/useAPI";
+import { DocumentResponse } from "../../api/useAPI";
 
 interface DocumentsSectionProps {
-  documents: LibraryDocument[];
+  documents: DocumentResponse[];
   onView: (id: number) => void;
   onDelete: (id: number) => void;
 }

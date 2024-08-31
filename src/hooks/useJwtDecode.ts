@@ -1,6 +1,13 @@
 import { useCallback } from "react";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { UserClaims } from "../api/useAPI";
+
+interface UserClaims {
+  userId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+}
 
 const useJwtDecode = () => {
   const decodeToken = useCallback((token: string) => {

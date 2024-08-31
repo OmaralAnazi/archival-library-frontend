@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { LibraryDocument } from "../../api/useAPI";
+import { DocumentResponse } from "../../api/useAPI";
 
 interface DocumentCardProps {
-  document: LibraryDocument;
+  document: DocumentResponse;
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
@@ -20,7 +20,8 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
       gap={4}
     >
       <Image
-        src={document.imageUrl}
+        // TODO: implement:
+        // src={document.imageUrl}
         alt={document.title}
         borderRadius="md"
         width={{ base: "100%", md: "150px" }}
@@ -34,19 +35,19 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
             {document.title}
           </Heading>
           <Text fontSize="sm" color="gray.500">
-            {document.author} -{" "}
-            {new Date(document.publicationDate).toLocaleDateString()}
+            {document.authorName} - {new Date(document.publicationDate).toLocaleDateString()}
           </Text>
           <Text mt={2}>{document.description}</Text>
           <Text mt={2} fontSize="sm" color="gray.600">
-            Category: {document.category}
+            Category: {document.categoryName}
           </Text>
         </Box>
         <Button
           mt={{ base: 4, md: 0 }}
           colorScheme="teal"
           width="full"
-          onClick={() => window.open(document.documentUrl, "_blank")}
+          // TODO: implement:
+          // onClick={() => window.open(document.documentUrl, "_blank")}
         >
           View Document
         </Button>

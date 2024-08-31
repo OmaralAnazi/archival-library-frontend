@@ -1,39 +1,26 @@
 import { HStack, Input, Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { LibraryDocument } from "../../api/useAPI";
+import { DocumentResponse } from "../../api/useAPI";
 
 interface SearchFilterProps {
-  documents: LibraryDocument[];
-  setFilteredDocs: (docs: LibraryDocument[]) => void;
+  documents: DocumentResponse[];
+  setFilteredDocs: (docs: DocumentResponse[]) => void;
 }
 
-const SearchFilter: React.FC<SearchFilterProps> = ({
-  documents,
-  setFilteredDocs,
-}) => {
+const SearchFilter: React.FC<SearchFilterProps> = ({ documents, setFilteredDocs }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
     const filtered = documents
-      .filter((doc) =>
-        doc.title.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .filter((doc) =>
-        filterCategory ? doc.category === filterCategory : true
-      )
+      .filter((doc) => doc.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      .filter((doc) => (filterCategory ? doc.categoryName === filterCategory : true))
       .sort((a, b) => {
         if (sortOrder === "newest") {
-          return (
-            new Date(b.publicationDate).getTime() -
-            new Date(a.publicationDate).getTime()
-          );
+          return new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime();
         } else {
-          return (
-            new Date(a.publicationDate).getTime() -
-            new Date(b.publicationDate).getTime()
-          );
+          return new Date(a.publicationDate).getTime() - new Date(b.publicationDate).getTime();
         }
       });
 
@@ -60,10 +47,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           <option value="Technology">Technology</option>
           <option value="Cataloging">Cataloging</option>
         </Select>
-        <Select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
+        <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
         </Select>

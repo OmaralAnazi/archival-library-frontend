@@ -7,7 +7,7 @@ const useAPI = () => {
   const { showMessage } = useCustomToast();
   const { accessToken } = useAuthStore();
   const { formatDate } = useFormat();
-  const BASE_URL = "https://localhost:7076";
+  const BASE_URL = "https://localhost:7076"; // TODO: extract to .env
 
   const api = axios.create({
     baseURL: BASE_URL + "/api",
@@ -27,7 +27,8 @@ const useAPI = () => {
 
       switch (status) {
         case 400:
-        case 401:
+          break;
+        case 401: // TODO: if 401, and has access token, then its expierd, log him out!!!
           break;
         case 403:
           showMessage(
@@ -36,13 +37,16 @@ const useAPI = () => {
           );
           break;
         case 404:
-          showMessage("Resource not found.", ToastStatus.ERROR);
+          showMessage("EROR_404: Resource not found.", ToastStatus.ERROR);
           break;
         case 500:
-          showMessage("An unexpected error occurred. Please try again later.", ToastStatus.ERROR);
+          showMessage(
+            "ERROR_500: An unexpected error occurred. Please try again later.",
+            ToastStatus.ERROR
+          );
           break;
         case 503:
-          showMessage("Service unavailable. Please try again later.", ToastStatus.ERROR);
+          showMessage("ERROR_503: Service unavailable. Please try again later.", ToastStatus.ERROR);
           break;
         default:
           showMessage("An unexpected error occurred.", ToastStatus.ERROR);
@@ -75,9 +79,52 @@ const useAPI = () => {
     }
   };
 
+  const uploadDocument = async (request: UploadDocumentRequest): Promise<unknown> => {
+    try {
+      const formData = new FormData();
+      formData.append("file", request.file);
+      formData.append("title", request.title);
+      formData.append("description", request.description);
+      formData.append("categoryId", "1"); // TODO: replace with real id
+
+      const options = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await api.post("/documents/upload", formData, options);
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const getAllDocuments = async (): Promise<DocumentResponse[]> => {
+    try {
+      const response = await api.get("/documents");
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const getAllDocumentsByUser = async (): Promise<DocumentResponse[]> => {
+    try {
+      const response = await api.get("/documents/my");
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
   return {
     submitLoginForm,
     submitSignupForm,
+    uploadDocument,
+    getAllDocuments,
+    getAllDocumentsByUser,
   };
 };
 
@@ -106,21 +153,18 @@ export interface SignupResponse {
   token: string;
 }
 
-export interface UserClaims {
-  userId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-}
-
-export interface LibraryDocument {
-  id: number;
+export interface UploadDocumentRequest {
+  file: File;
   title: string;
-  author: string;
-  publicationDate: string;
   description: string;
   category: string;
-  imageUrl: string;
-  documentUrl: string;
+}
+
+export interface DocumentResponse {
+  id: number;
+  title: string;
+  description: string;
+  categoryName: string;
+  authorName: string;
+  publicationDate: string;
 }

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   Box,
   Button,
@@ -14,26 +15,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import useCustomToast, { ToastStatus } from "../../hooks/useCustomToast";
+import useAPI from "../../api/useAPI";
+
+// TODO: consider refactor this file
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   category: Yup.string().required("Category is required"),
   description: Yup.string().required("Description is required"),
-  file: Yup.mixed<FileList>()
-    .required("A PDF file is required")
-    .test(
-      "fileType",
-      "Only PDF files are allowed",
-      (value) =>
-        value && value.length > 0 && value[0].type === "application/pdf"
-    ),
+  file: Yup.mixed<File>().required("A PDF file is required"),
 });
 
 type UploadFormInputs = {
   title: string;
   category: string;
   description: string;
-  file: FileList;
+  file: File;
 };
 
 const Upload = () => {
@@ -42,16 +39,29 @@ const Upload = () => {
     register,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm<UploadFormInputs>({
     resolver: yupResolver(validationSchema),
   });
-
   const { showMessage } = useCustomToast();
+  const { uploadDocument } = useAPI();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const onSubmit = (data: UploadFormInputs) => {
-    // TODO: Implement upload logic (e.g., file upload to backend)
-    showMessage("Document Uploaded", ToastStatus.SUCCESS);
-    reset();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue("file", file, { shouldValidate: true });
+    }
+  };
+
+  const onSubmit = async (data: UploadFormInputs) => {
+    try {
+      await uploadDocument(data);
+      showMessage("Document Uploaded Successfully", ToastStatus.SUCCESS);
+      reset();
+    } catch (error) {
+      showMessage("Failed to upload document", ToastStatus.ERROR);
+    }
   };
 
   return (
@@ -73,23 +83,13 @@ const Upload = () => {
         <VStack spacing={4}>
           <FormControl isInvalid={!!errors.title}>
             <FormLabel htmlFor="title">Title</FormLabel>
-            <Input
-              id="title"
-              placeholder="Enter document title"
-              {...register("title")}
-            />
-            <FormErrorMessage>
-              {errors.title && errors.title.message}
-            </FormErrorMessage>
+            <Input id="title" placeholder="Enter document title" {...register("title")} />
+            <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.category}>
             <FormLabel htmlFor="category">Category</FormLabel>
-            <Select
-              id="category"
-              placeholder="Select category"
-              {...register("category")}
-            >
+            <Select id="category" placeholder="Select category" {...register("category")}>
               {/* TODO: get from backend */}
               <option value="Science">Science</option>
               <option value="History">History</option>
@@ -97,9 +97,7 @@ const Upload = () => {
               <option value="Technology">Technology</option>
               <option value="Cataloging">Cataloging</option>
             </Select>
-            <FormErrorMessage>
-              {errors.category && errors.category.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.description}>
@@ -109,25 +107,22 @@ const Upload = () => {
               placeholder="Enter a brief description"
               {...register("description")}
             />
-            <FormErrorMessage>
-              {errors.description && errors.description.message}
-            </FormErrorMessage>
+            <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.file}>
             <FormLabel htmlFor="file">Upload File</FormLabel>
-            <Input id="file" type="file" accept=".pdf" {...register("file")} />
-            <FormErrorMessage>
-              {errors.file && errors.file.message}
-            </FormErrorMessage>
+            <Input
+              id="file"
+              type="file"
+              accept=".pdf"
+              ref={fileInputRef}
+              onChange={handleFileChange} // Handling file change separately
+            />
+            <FormErrorMessage>{errors.file?.message}</FormErrorMessage>
           </FormControl>
 
-          <Button
-            type="submit"
-            colorScheme="teal"
-            width="full"
-            isLoading={isSubmitting}
-          >
+          <Button type="submit" colorScheme="teal" width="full" isLoading={isSubmitting}>
             Upload
           </Button>
         </VStack>

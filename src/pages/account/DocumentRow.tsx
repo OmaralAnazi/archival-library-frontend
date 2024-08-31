@@ -1,9 +1,9 @@
 import { Tr, Td, HStack, IconButton } from "@chakra-ui/react";
 import { FaTrash, FaEye } from "react-icons/fa";
-import { LibraryDocument } from "../../api/useAPI";
+import { DocumentResponse } from "../../api/useAPI";
 
 interface DocumentRowProps {
-  document: LibraryDocument;
+  document: DocumentResponse;
   onView: (id: number) => void;
   onDelete: (id: number) => void;
 }

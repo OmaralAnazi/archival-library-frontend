@@ -25,7 +25,8 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ children }) => {
             Access Restricted
           </Heading>
           <Text fontSize="lg" color="gray.600">
-            You need to be logged in to access this page. Please log in to continue.
+            It seems you are either not logged in or your session has expired. Please log in again
+            to continue.
           </Text>
           <Button as={RouterLink} to="/login" colorScheme="teal" size="lg" mt={4}>
             Go to Login
