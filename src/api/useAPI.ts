@@ -1,10 +1,12 @@
 import axios from "axios";
 import useAuthStore from "../stores/AuthStore";
 import useCustomToast, { ToastStatus } from "../hooks/useCustomToast";
+import useFormat from "../hooks/useFormat";
 
 const useAPI = () => {
   const { showMessage } = useCustomToast();
-  const { accessToken, logout } = useAuthStore();
+  const { accessToken } = useAuthStore();
+  const { formatDate } = useFormat();
   const BASE_URL = "https://localhost:7076";
 
   const api = axios.create({
@@ -28,7 +30,10 @@ const useAPI = () => {
         case 401:
           break;
         case 403:
-          showMessage("Forbidden. You don't have permission to access this resource.", ToastStatus.ERROR);
+          showMessage(
+            "Forbidden. You don't have permission to access this resource.",
+            ToastStatus.ERROR
+          );
           break;
         case 404:
           showMessage("Resource not found.", ToastStatus.ERROR);
@@ -57,8 +62,22 @@ const useAPI = () => {
     }
   };
 
+  const submitSignupForm = async (request: SignupRequest): Promise<SignupResponse> => {
+    try {
+      const formattedRequest = {
+        ...request,
+        birthdate: formatDate(request.birthdate),
+      };
+      const response = await api.post("/auth/register", formattedRequest);
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
   return {
     submitLoginForm,
+    submitSignupForm,
   };
 };
 
@@ -70,6 +89,20 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  token: string;
+}
+
+export interface SignupRequest {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  birthdate: Date;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface SignupResponse {
   token: string;
 }
 

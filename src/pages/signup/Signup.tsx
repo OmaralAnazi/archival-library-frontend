@@ -12,60 +12,10 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-
-const validationSchema = Yup.object({
-  firstName: Yup.string().min(3).required("First name is required"),
-  lastName: Yup.string().min(3).required("Last name is required"),
-  phone: Yup.string()
-    .required("Phone number is required")
-    .matches(/^[0-9]+$/, "Phone number is not valid")
-    .min(10, "Phone number must be at least 10 digits"),
-  birthdate: Yup.date()
-    .required("Birthdate is required")
-    .max(new Date(), "Birthdate cannot be in the future"),
-  email: Yup.string()
-    .required("Email is required")
-    .email("Invalid email address"),
-  password: Yup.string()
-    .required("Password is required")
-    .min(6, "Password must be at least 6 characters"),
-  confirmPassword: Yup.string()
-    .required("Please confirm your password")
-    .oneOf([Yup.ref("password")], "Passwords must match"),
-});
-
-type SignupFormInputs = {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  birthdate: Date;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import useSignup from "../../hooks/useSignup";
 
 const Signup = () => {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupFormInputs>({
-    resolver: yupResolver(validationSchema),
-  });
-
-  const onSubmit = async (data: SignupFormInputs) => {
-    const formattedData = {
-      ...data,
-      birthdate: data.birthdate.toISOString().split("T")[0], // Convert date to yyyy-MM-dd
-    };
-
-    console.log("Formatted Form Submitted", formattedData);
-
-    // TODO: Handle the logic needed to talk to the backend!
-  };
+  const { handleSubmit, register, onSubmit, formState } = useSignup();
 
   return (
     <Box
@@ -85,7 +35,7 @@ const Signup = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4}>
           <HStack spacing={4} width="full">
-            <FormControl isInvalid={!!errors.firstName}>
+            <FormControl isInvalid={!!formState.errors.firstName}>
               <FormLabel htmlFor="firstName">First Name</FormLabel>
               <Input
                 id="firstName"
@@ -93,37 +43,33 @@ const Signup = () => {
                 {...register("firstName")}
               />
               <FormErrorMessage>
-                {errors.firstName && errors.firstName.message}
+                {formState.errors.firstName && formState.errors.firstName.message}
               </FormErrorMessage>
             </FormControl>
 
-            <FormControl isInvalid={!!errors.lastName}>
+            <FormControl isInvalid={!!formState.errors.lastName}>
               <FormLabel htmlFor="lastName">Last Name</FormLabel>
-              <Input
-                id="lastName"
-                placeholder="Enter your last name"
-                {...register("lastName")}
-              />
+              <Input id="lastName" placeholder="Enter your last name" {...register("lastName")} />
               <FormErrorMessage>
-                {errors.lastName && errors.lastName.message}
+                {formState.errors.lastName && formState.errors.lastName.message}
               </FormErrorMessage>
             </FormControl>
           </HStack>
 
-          <FormControl isInvalid={!!errors.phone}>
-            <FormLabel htmlFor="phone">Phone Number</FormLabel>
+          <FormControl isInvalid={!!formState.errors.phoneNumber}>
+            <FormLabel htmlFor="phoneNumber">phone Number</FormLabel>
             <Input
-              id="phone"
+              id="phoneNumber"
               type="tel"
               placeholder="Enter your phone number"
-              {...register("phone")}
+              {...register("phoneNumber")}
             />
             <FormErrorMessage>
-              {errors.phone && errors.phone.message}
+              {formState.errors.phoneNumber && formState.errors.phoneNumber.message}
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.birthdate}>
+          <FormControl isInvalid={!!formState.errors.birthdate}>
             <FormLabel htmlFor="birthdate">Birthdate</FormLabel>
             <Input
               id="birthdate"
@@ -132,24 +78,19 @@ const Signup = () => {
               {...register("birthdate")}
             />
             <FormErrorMessage>
-              {errors.birthdate && errors.birthdate.message}
+              {formState.errors.birthdate && formState.errors.birthdate.message}
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.email}>
+          <FormControl isInvalid={!!formState.errors.email}>
             <FormLabel htmlFor="email">Email Address</FormLabel>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              {...register("email")}
-            />
+            <Input id="email" type="email" placeholder="Enter your email" {...register("email")} />
             <FormErrorMessage>
-              {errors.email && errors.email.message}
+              {formState.errors.email && formState.errors.email.message}
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.password}>
+          <FormControl isInvalid={!!formState.errors.password}>
             <FormLabel htmlFor="password">Password</FormLabel>
             <Input
               id="password"
@@ -158,11 +99,11 @@ const Signup = () => {
               {...register("password")}
             />
             <FormErrorMessage>
-              {errors.password && errors.password.message}
+              {formState.errors.password && formState.errors.password.message}
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.confirmPassword}>
+          <FormControl isInvalid={!!formState.errors.confirmPassword}>
             <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
             <Input
               id="confirmPassword"
@@ -171,16 +112,11 @@ const Signup = () => {
               {...register("confirmPassword")}
             />
             <FormErrorMessage>
-              {errors.confirmPassword && errors.confirmPassword.message}
+              {formState.errors.confirmPassword && formState.errors.confirmPassword.message}
             </FormErrorMessage>
           </FormControl>
 
-          <Button
-            type="submit"
-            colorScheme="teal"
-            width="full"
-            isLoading={isSubmitting}
-          >
+          <Button type="submit" colorScheme="teal" width="full" isLoading={formState.isSubmitting}>
             Sign Up
           </Button>
         </VStack>
