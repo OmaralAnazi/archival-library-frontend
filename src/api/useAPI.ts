@@ -111,6 +111,7 @@ export interface UserClaims {
   email: string;
   firstName: string;
   lastName: string;
+  phoneNumber: string;
 }
 
 export interface LibraryDocument {

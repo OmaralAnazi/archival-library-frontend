@@ -10,7 +10,7 @@ const Header = () => {
     <Box as="header" bg="teal.500" color="white" py={4} px={8} w={"100%"}>
       <Flex justify="space-between" align="center">
         <Heading as="h1" size="lg">
-          The Archival Library
+          Archival Library
         </Heading>
         <Flex gap={4}>
           {routes.map((route) => {

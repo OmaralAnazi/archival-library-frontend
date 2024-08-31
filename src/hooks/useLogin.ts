@@ -9,7 +9,9 @@ import useCustomToast, { ToastStatus } from "./useCustomToast";
 
 const validationSchema = Yup.object({
   email: Yup.string().required("Email is required").email("Invalid email address"),
-  password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters"),
 });
 
 const useLogin = () => {
@@ -17,10 +19,11 @@ const useLogin = () => {
     resolver: yupResolver(validationSchema),
   });
   const { submitLoginForm } = useAPI();
-  const { setAccessToken, setUserId, setEmail, setFirstName, setLastName } = useAuthStore();
   const navigate = useNavigate();
   const { decodeToken } = useJwtDecode();
   const { showMessage } = useCustomToast();
+  const { setAccessToken, setUserId, setEmail, setFirstName, setLastName, setPhoneNumber } =
+    useAuthStore();
 
   const onSubmit = async (data: LoginRequest) => {
     try {
@@ -37,6 +40,7 @@ const useLogin = () => {
       setEmail(claims.email);
       setFirstName(claims.firstName);
       setLastName(claims.lastName);
+      setPhoneNumber(claims.phoneNumber);
 
       navigate("/");
     } catch (error) {

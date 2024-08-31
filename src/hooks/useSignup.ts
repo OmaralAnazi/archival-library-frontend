@@ -38,7 +38,8 @@ const useSignup = () => {
   const navigate = useNavigate();
   const { submitSignupForm } = useAPI();
   const { decodeToken } = useJwtDecode();
-  const { setAccessToken, setUserId, setEmail, setFirstName, setLastName } = useAuthStore();
+  const { setAccessToken, setUserId, setEmail, setFirstName, setLastName, setPhoneNumber } =
+    useAuthStore();
 
   const onSubmit = async (data: SignupRequest) => {
     try {
@@ -55,6 +56,7 @@ const useSignup = () => {
       setEmail(claims.email);
       setFirstName(claims.firstName);
       setLastName(claims.lastName);
+      setPhoneNumber(claims.phoneNumber);
 
       navigate("/");
     } catch (error) {
