@@ -14,7 +14,12 @@ const Explore = () => {
   }, []);
 
   return (
-    <Box p={8} maxW={1280} mx="auto">
+    <Box
+      p={8}
+      maxW={1280}
+      mx="auto"
+      w={{ base: "95%", sm: "90%", md: "85%", lg: "80%", xl: "75%" }}
+    >
       <Heading as="h2" size="xl" mb={6} textAlign="center" color="teal.600">
         Library Documents
       </Heading>
@@ -23,7 +28,7 @@ const Explore = () => {
       </VStack>
       {filteredDocs.length === 0 ? (
         <Center>
-          <Text fontSize="lg" color="gray.500">
+          <Text fontSize="lg" color="gray.500" textAlign="center" mt={10}>
             No documents found. Try adjusting your search or filter criteria.
           </Text>
         </Center>

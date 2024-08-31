@@ -42,7 +42,7 @@ const useLogin = () => {
       setLastName(claims.lastName);
       setPhoneNumber(claims.phoneNumber);
 
-      navigate("/");
+      navigate("/account");
     } catch (error) {
       showMessage("Invalid email or password.", ToastStatus.ERROR);
     }

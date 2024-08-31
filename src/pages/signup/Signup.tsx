@@ -10,12 +10,27 @@ import {
   Heading,
   Text,
   Link,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import useSignup from "../../hooks/useSignup";
 
 const Signup = () => {
   const { handleSubmit, register, onSubmit, formState } = useSignup();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   return (
     <Box
@@ -57,7 +72,7 @@ const Signup = () => {
           </HStack>
 
           <FormControl isInvalid={!!formState.errors.phoneNumber}>
-            <FormLabel htmlFor="phoneNumber">phone Number</FormLabel>
+            <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
             <Input
               id="phoneNumber"
               type="tel"
@@ -92,12 +107,23 @@ const Signup = () => {
 
           <FormControl isInvalid={!!formState.errors.password}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              {...register("password")}
-            />
+            <InputGroup>
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                {...register("password")}
+              />
+              <InputRightElement>
+                <IconButton
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  onClick={togglePasswordVisibility}
+                  variant="ghost"
+                  size="sm"
+                />
+              </InputRightElement>
+            </InputGroup>
             <FormErrorMessage>
               {formState.errors.password && formState.errors.password.message}
             </FormErrorMessage>
@@ -105,12 +131,25 @@ const Signup = () => {
 
           <FormControl isInvalid={!!formState.errors.confirmPassword}>
             <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
-              {...register("confirmPassword")}
-            />
+            <InputGroup>
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                {...register("confirmPassword")}
+              />
+              <InputRightElement>
+                <IconButton
+                  aria-label={
+                    showConfirmPassword ? "Hide confirm password" : "Show confirm password"
+                  }
+                  icon={showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  onClick={toggleConfirmPasswordVisibility}
+                  variant="ghost"
+                  size="sm"
+                />
+              </InputRightElement>
+            </InputGroup>
             <FormErrorMessage>
               {formState.errors.confirmPassword && formState.errors.confirmPassword.message}
             </FormErrorMessage>

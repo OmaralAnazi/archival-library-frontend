@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import useAPI, { DocumentResponse } from "../../api/useAPI";
+import PdfPlaceholder from "../../assets/pdf-placeholder.png";
 
 interface DocumentCardProps {
   document: DocumentResponse;
@@ -22,16 +23,15 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ document }) => {
       gap={4}
     >
       <Image
-        // TODO: implement:
-        // src={document.imageUrl}
+        src={PdfPlaceholder}
         alt={document.title}
         borderRadius="md"
-        width={{ base: "100%", md: "150px" }}
+        width={{ base: "100%", md: "180px" }}
         height={{ base: "auto", md: "100%" }}
         objectFit="cover"
         flexShrink={0}
       />
-      <Flex direction="column" justifyContent="space-between" flex="1">
+      <Flex direction="column" justifyContent="space-between" flex="1" height={"100%"}>
         <Box mb={4}>
           <Heading as="h3" size="md" mb={2}>
             {document.title}

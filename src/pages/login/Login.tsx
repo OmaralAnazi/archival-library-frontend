@@ -9,12 +9,22 @@ import {
   Heading,
   Text,
   Link,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import useLogin from "../../hooks/useLogin";
 
 const Login = () => {
   const { handleSubmit, register, onSubmit, formState } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <Box
@@ -36,13 +46,33 @@ const Login = () => {
           <FormControl isInvalid={!!formState.errors.email}>
             <FormLabel htmlFor="email">Email Address</FormLabel>
             <Input id="email" type="email" placeholder="Enter your email" {...register("email")} />
-            <FormErrorMessage>{formState.errors.email && formState.errors.email.message}</FormErrorMessage>
+            <FormErrorMessage>
+              {formState.errors.email && formState.errors.email.message}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!formState.errors.password}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Input id="password" type="password" placeholder="Enter your password" {...register("password")} />
-            <FormErrorMessage>{formState.errors.password && formState.errors.password.message}</FormErrorMessage>
+            <InputGroup>
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                {...register("password")}
+              />
+              <InputRightElement>
+                <IconButton
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  onClick={togglePasswordVisibility}
+                  variant="ghost"
+                  size="sm"
+                />
+              </InputRightElement>
+            </InputGroup>
+            <FormErrorMessage>
+              {formState.errors.password && formState.errors.password.message}
+            </FormErrorMessage>
           </FormControl>
 
           <Button type="submit" colorScheme="teal" width="full" isLoading={formState.isSubmitting}>

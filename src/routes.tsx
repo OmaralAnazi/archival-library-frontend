@@ -11,8 +11,8 @@ const routes = [
     path: "/",
     element: <Home />,
     requireAuth: false,
-    hideFromHeaderForGuestUsers: false,
-    hideFromHeaderForLoggedInUsers: false,
+    hideFromHeaderForGuestUsers: true,
+    hideFromHeaderForLoggedInUsers: true,
   },
   {
     name: "Login",

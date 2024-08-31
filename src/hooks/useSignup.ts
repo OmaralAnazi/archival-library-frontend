@@ -58,8 +58,12 @@ const useSignup = () => {
       setLastName(claims.lastName);
       setPhoneNumber(claims.phoneNumber);
 
-      navigate("/");
-    } catch (error) {
+      navigate("/account");
+    } catch (error: any) {
+      if (error?.response?.data[0]?.code === "DuplicateUserName") {
+        showMessage("This email address is already registered.", ToastStatus.ERROR);
+        return;
+      }
       showMessage("Signup failed. Please try again.", ToastStatus.ERROR);
     }
   };

@@ -21,7 +21,7 @@ import useCategories from "../../hooks/useCategories";
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   categoryId: Yup.string().required("Category is required"),
-  description: Yup.string().required("Description is required"),
+  description: Yup.string().max(255).required("Description is required"),
   file: Yup.mixed<File>().required("A PDF file is required"),
 });
 

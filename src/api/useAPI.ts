@@ -8,7 +8,7 @@ const useAPI = () => {
   const { accessToken } = useAuthStore();
   const { formatDate } = useFormat();
   const { logout } = useAuthStore();
-  const BASE_URL = "https://localhost:7076"; // TODO: extract to .env
+  const BASE_URL = "https://localhost:7076";
 
   const api = axios.create({
     baseURL: BASE_URL + "/api",
