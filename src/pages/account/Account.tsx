@@ -62,7 +62,17 @@ const Account: React.FC = () => {
   }, []);
 
   return (
-    <Box p={8} mx="auto" mt={10} borderWidth={1} borderRadius="lg" boxShadow="xl" bg="white">
+    <Box
+      p={8}
+      mx="auto"
+      mt={10}
+      borderWidth={1}
+      borderRadius="lg"
+      boxShadow="xl"
+      bg="white"
+      w={"90%"}
+      maxW={"1080px"}
+    >
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         <ProfileSection onLogout={handleLogout} />
 

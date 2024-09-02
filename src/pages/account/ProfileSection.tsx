@@ -19,7 +19,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onLogout }) => {
       borderRight={{ base: "none", md: "1px solid gray" }}
       borderColor="gray.200"
       pr={{ base: 0, md: 8 }}
-      minW="300px"
     >
       <Avatar size="2xl" name={`${firstName} ${lastName}`} />
       <Heading as="h2" size="lg" color="teal.600">

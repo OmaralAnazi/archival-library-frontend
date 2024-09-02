@@ -12,7 +12,7 @@ const DocumentRow: React.FC<DocumentRowProps> = ({ document, onView, onDelete })
   return (
     <Tr _hover={{ bg: "gray.100" }}>
       <Td>{document.title}</Td>
-      <Td>{document.publicationDate}</Td>
+      <Td>{document.publicationDate.split("T")[0]}</Td>
       <Td>
         <HStack spacing={2}>
           <IconButton
