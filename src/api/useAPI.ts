@@ -8,7 +8,7 @@ const useAPI = () => {
   const { accessToken } = useAuthStore();
   const { formatDate } = useFormat();
   const { logout } = useAuthStore();
-  const BASE_URL = "https://localhost:7076";
+  const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
   const api = axios.create({
     baseURL: BASE_URL + "/api",
@@ -24,6 +24,21 @@ const useAPI = () => {
       return response;
     },
     (error) => {
+      // Check if the error is related to a network issue
+      if (!error.response) {
+        if (error.message.includes("Network Error")) {
+          showMessage(
+            "Network Error: Unable to reach the server. Please check your internet connection.",
+            ToastStatus.ERROR
+          );
+        } else if (error.code === "ECONNABORTED") {
+          showMessage("Request timed out. Please try again.", ToastStatus.ERROR);
+        } else {
+          showMessage("An unexpected network error occurred.", ToastStatus.ERROR);
+        }
+        return Promise.reject(error);
+      }
+
       const { status } = error.response || {};
 
       switch (status) {
